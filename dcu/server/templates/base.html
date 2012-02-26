@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>DCU :: {% block title %}DCU Control Unit{% endblock %}</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <link href="{% get_static_prefix %}css/default.css" rel="stylesheet" type="text/css">
+  <link href="{% get_static_prefix %}css/jquery-ui-1.8.16.smoothness.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script type="text/javascript" src="{% get_static_prefix %}js/jquery-ui-1.8.16.min.js"></script>
+  <script type="text/javascript" src="{% get_static_prefix %}js/jquery.timers-1.2.js"></script>
+  <script type="text/javascript" src="{% get_static_prefix %}js/dcu.js"></script>
+{% if not user.is_authenticated %}  <script type="text/javascript" src="{% get_static_prefix %}js/login.js"></script>{% endif %}
+</head>
+<body style="background: url({% get_static_prefix %}img/bg.gif)">
+  <span id="plus-toolbar" class="ui-widget-header ui-corner-all toolbar">
+    <button id="client-select-button">Add new DCU-Window</button>
+  </span>
+	<span id="user-toolbar" class="ui-widget-header ui-corner-all toolbar">
+		<label id="username">{% if user.is_authenticated %}{{ user.username }}{% endif %}</label>
+		<button id="logout-button">Logout</button>
+	</span>
+{% if not user.is_authenticated %}
+  <div id="login-dialog" title="Authentification" style="display:none">
+    <form>
+    <fieldset>
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all" />
+    </fieldset>
+    </form>
+  </div>
+{% endif %}
+</body>
+</html>
