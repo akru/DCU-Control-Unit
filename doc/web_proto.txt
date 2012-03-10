@@ -1,6 +1,6 @@
-DCU2 :: The main web - protocol:
+DCU2 :: The main web - protocol: ver 1.0
 
-  Request stucture:
+  Request stucture[JSON][GET]:
 	[key] [request]
 
 	keys:
@@ -8,7 +8,7 @@ DCU2 :: The main web - protocol:
 		client - client request(be proxed to client module)
 	
 	server requests:
-		login - requet login & password rows, return {auth:true} if success and user "name" row
+		login - requet login & password rows
 		logout - return {logout:true} if success 
 		clist - return html template list clients
 		cinfo - return html template info about client
@@ -20,6 +20,13 @@ DCU2 :: The main web - protocol:
 		last_connect - last connect time in seconds(int)
 		free         - client is free(bool)
 	
+	login object:
+		auth         - may be true or false
+		username
+	
+	logout object:
+		logout       - may be true or false
+
 	cinfo object:
 		description  - small description from module(string)
 		version      - client version(string)
@@ -28,3 +35,6 @@ DCU2 :: The main web - protocol:
 		html         - html content(string)
 		buttons      - list of smart buttons in bottom(associative array)
 
+  client request:
+	  "server": {"name": ..., "module_name": ...},
+		"client": {...}

@@ -6,9 +6,10 @@
 $(document).ready(function(){
 	$("#login-dialog").dialog({
 		autoOpen: true,
-		height: 200,
+		height: 190,
 		width: 260,
 		modal: true,
+		resizable: false,
 		buttons: {
 			"Ok" : function(){
 				try_auth($("#name").val(), $("#password").val());
@@ -24,7 +25,7 @@ function try_auth(name, password){
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "ajax",
+		url: "ajax/",
 		data: { 
 			"server": "login", 
 			"name": name, 

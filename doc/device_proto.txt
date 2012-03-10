@@ -1,0 +1,25 @@
+DCU2 :: The main device - protocol: ver 1.0
+
+	Request structure[JSON][POST]:
+	{
+		"server": {  /* Performed at server */
+			"name": "foo",        /* Unical name(50 chars)  */
+			"module_name": "foom",/* Registered module name */
+			"version": 1          /* Int version of module  */
+		},
+		"client": {  /* Proxy in to module */
+			"state": {},          /* Some state             */
+			/* ... */
+		}
+	}
+
+	Return structure[JSON]:
+	{
+		"server": { /* Performed at server */
+			"status" "OK", /* err_unreg-module/err_unsupport-version */
+		},
+		"client": { /* Proxy from module */
+			"task": "foo",
+			/* ... */
+		}
+	}

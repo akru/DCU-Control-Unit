@@ -1,6 +1,11 @@
 <div id="client-select-dialog" title="DCU-Client list" style="display:none">
 	<p>Please select robot for control:</p>
 	<ol id="client-list">
-	
+{% for client in clist %}
+		<li class="ui-widget-content">
+			<div class="client-name">{{ client.name }}</div>
+			<div class="client-module">{{ client.module_name }}</div>
+		</li>
+{% endfor %}
 	</ol>
 </div>
