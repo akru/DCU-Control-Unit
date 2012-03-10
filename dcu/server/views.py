@@ -27,7 +27,7 @@ def dcu_handler(request):
                                                      "application/x-javascript")
         else:
             models.register(req["name"], req["module_name"])
-            res = module_loader.get_module(req["module_name"]).proxy(request.POST)
+            res = module_loader.get_module(req["module_name"]).proxy(req["name"], request.POST)
             return HttpResponse(simplejson.dumps({"server":{"status": "OK"}, "client": res}),
                                                      "application/x-javascript")
     return HttpResponse(status = 400)
