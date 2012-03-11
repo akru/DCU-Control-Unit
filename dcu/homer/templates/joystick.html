@@ -133,11 +133,21 @@
             $(this).data("startLeft",parseInt($(this).css("left")));
             $(this).data("startTop",parseInt($(this).css("top")));
         },
-        drag: function(event,ui){
+        stop: function() {
+            //Debug string (2 of 2)
+            //$('#coords').html("&nbsp;");
+            $('.progressbar-cover_left').css('bottom', '0%');
+            $('.progressbar-value_left').css('backgroundColor' , '#0f0' );
+            $('.progressbar-cover_right').css('bottom' , '0%');
+            $('.progressbar-value_right').css('backgroundColor' , '#0f0' );
+        }
+     });
+       
+    $("#mover").everyTime(300, 't1', function(){
             var track_left, track_right;
             var bgcolor_right, bgcolor_left;                                            
-            var rel_left = Math.round((ui.position.left - parseInt($(this).data("startLeft")))*100/55);
-            var rel_top = Math.round((ui.position.top - parseInt($(this).data("startTop")))*100/55);
+            var rel_left = Math.round(($(this).position().left - parseInt($(this).data("startLeft")))*100/55);
+            var rel_top = Math.round(($(this).position().top - parseInt($(this).data("startTop")))*100/55);
                        
             
             if ((Math.abs(rel_left) < 10) && (Math.abs(rel_top) < 10)) {
@@ -166,16 +176,6 @@
             $('.progressbar-value_right').css('backgroundColor' , bgcolor_right );
             // Debug string (1 of 2)
             //$('#coords').text(rel_left + ", " + rel_top + " ... " + track_left + ", " + track_right + " | " + G_x + ", " + G_y);
-          
-        },
-        stop: function() {
-            //Debug string (2 of 2)
-            //$('#coords').html("&nbsp;");
-            $('.progressbar-cover_left').css('bottom', '0%');
-            $('.progressbar-value_left').css('backgroundColor' , '#0f0' );
-            $('.progressbar-cover_right').css('bottom' , '0%');
-            $('.progressbar-value_right').css('backgroundColor' , '#0f0' );
-        }
     });
 
     function send_control(track_left, track_right) {

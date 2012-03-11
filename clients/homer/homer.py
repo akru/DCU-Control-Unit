@@ -44,8 +44,8 @@ class HOMER:
 		self._status = "HOMER: Main routine complete."
 		self._pid = None
 
-	def setTrack(self, left, right):
-		left_c = 50 * left + 1500;
-		right_c = 50 * right + 1500;
+	def setTrackControl(self, left, right):
+		left_c = 5 * left + 1600;
+		right_c = 5 * right + 1600;
 		self._c.setTrackPos(left_c, right_c)
-
+		print "%s %s" % (left_c, right_c)

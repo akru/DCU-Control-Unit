@@ -4,7 +4,9 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 from django.utils import simplejson
 import socket
+import time
 
+SERVER = "localhost:8000"
 
 def homer_client(sock):
 	h = HOMER(sock)
@@ -16,13 +18,15 @@ def homer_client(sock):
 		request = urllib2.Request("http://%s/dcu/" % SERVER, datagen, headers)
 		try:
 			getdata = urllib2.urlopen(request)
-			if getdata in "client":
-				c = simplejson.loads(getdata["client"])
+			resp = simplejson.loads(getdata.read())
+ 			if "client" in resp:
+				c = resp["client"]
 				h.setTrackControl(c["track_left"], c["track_right"])
 			else:
 				print getdata
 		except urllib2.HTTPError, error:
 			print error.read()
+		time.sleep(1)
 
 if __name__ == '__main__':
 	register_openers()
