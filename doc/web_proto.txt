@@ -36,6 +36,7 @@ DCU2 :: The main web - protocol: ver 1.0
 		buttons      - list of smart buttons in bottom(associative array)
 
   client request:
-	  "name": ..., 
-		"module_name": ...,
-		"client": {...}
+	"client": ...,
+	"name": ..., 
+	"module_name": ...,
+	...

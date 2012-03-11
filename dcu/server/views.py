@@ -56,7 +56,7 @@ def ajax_handler(request):
                     return HttpResponse(simplejson.dumps({"html": clist_html}), "application/x-javascript")
                 elif request.GET["server"] == "cview":
                     module_views = module_loader.get_views(request.GET["module_name"])
-                    cview_html = module_views.main(request)
+                    cview_html = module_views.main()
                     return HttpResponse(simplejson.dumps({"html": cview_html}), "application/x-javascript")
                 elif request.GET["server"] == "cstart" and "name" in request.GET:
                     res = models.set_user(request.GET["name"], request.user.username)
@@ -64,10 +64,15 @@ def ajax_handler(request):
                 elif request.GET["server"] == "cstop" and "name" in request.GET:
                     res = models.unset_user(request.GET["name"], request.user.username)
                     return HttpResponse(simplejson.dumps({"server": res}), "application/x-javascript")
-                elif "client" in request.GET:
-                    if "name" in request.GET and "module_name" in request.GET:
-                        mod = module_loader.get_module(request.GET["module_name"])
-                        res = mod.ajax(request.GET["name"], request.GET["client"])
-                        return HttpResponse(simplejson.dumps({"client": res}), "application/x-javascript")
+            else:
+                return HttpResponse(status = 403)
+        elif "client" in request.GET:
+            if request.user.is_authenticated:
+                if "name" in request.GET and "module_name" in request.GET:
+                    mod = module_loader.get_module(request.GET["module_name"])
+                    res = mod.ajax(request.GET["name"], request.GET)
+                    return HttpResponse(simplejson.dumps({"client": res}), "application/x-javascript")
+            else:
+                return HttpResponse(status = 403)
     return HttpResponse(status = 400)
 

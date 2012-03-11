@@ -45,7 +45,7 @@ class HOMER:
 		self._pid = None
 
 	def setTrack(self, left, right):
-		left_c = 10 * left + 750;
-		right_c = 10 * right + 750;
+		left_c = 50 * left + 1500;
+		right_c = 50 * right + 1500;
 		self._c.setTrackPos(left_c, right_c)
 

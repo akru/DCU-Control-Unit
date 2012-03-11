@@ -10,7 +10,7 @@ def homer_client(sock):
 	h = HOMER(sock)
 	while True:
 		datagen, headers = multipart_encode({
-			'server': simplejson.dumps({'name':'homer-1', 'module_name':'homer', 'version': 1}),
+			'server': simplejson.dumps({'name':'HOMER', 'module_name':'homer', 'version': 1}),
 			'client': 'get_tc'
 		})
 		request = urllib2.Request("http://%s/dcu/" % SERVER, datagen, headers)

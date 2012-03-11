@@ -1,0 +1,10 @@
+DCU2 :: Module description
+
+  Requirements:
+    models.py:
+      proxy(name, request) - proxy robots requests
+      ajax(name, request)  - proxy web-ui requests
+
+    views.py:
+      main() - return main-ui for client window
+

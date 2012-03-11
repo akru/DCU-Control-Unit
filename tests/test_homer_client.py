@@ -14,15 +14,15 @@ def appengine_cam():
 #		os.system("fswebcam --title HOMER-SP --jpeg 40 -F 2 -S 1 -q tmp.jpg")
 	datagen, headers = multipart_encode({
 #			'img': open('tmp.jpg', 'rb')
-		'server': simplejson.dumps({'name':'homerko', 'module_name':'homer', 'version': 1}),
+		'server': simplejson.dumps({'name':'HOMER', 'module_name':'homer', 'version': 1}),
 		'client': 'tete'
 	})
 	request = urllib2.Request("http://%s/dcu/" % SERVER, datagen, headers)
 	try:
 		getdata = urllib2.urlopen(request)
-		print getdata.read()
+		print "< %s" % getdata.read()
 	except urllib2.HTTPError, error:
-		print error.read()
+		print "< %s" % error.read()
 
 if __name__ == '__main__':
 	register_openers()
