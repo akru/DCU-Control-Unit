@@ -6,7 +6,7 @@ from django.utils import simplejson
 import socket
 import time
 
-SERVER = "localhost:8000"
+SERVER = "dcuctl.ru"
 
 def homer_client(sock):
 	h = HOMER(sock)
