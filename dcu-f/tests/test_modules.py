@@ -17,7 +17,4 @@ if __name__ == '__main__':
 
     for module in get_list():
         print '==> %s: Test started...' % module
-        if load(module).test.start():
-            print '==> PASS'
-        else:
-            print '==> FAIL'
+        load(module).test.start()
