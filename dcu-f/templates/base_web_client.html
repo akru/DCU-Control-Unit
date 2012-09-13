@@ -39,6 +39,10 @@ $(document).ready(function() {
                     $("body").attr("uid", data["uid"]);
                     $.cookie("uid", data["uid"]);
                     load_web_module();
+                },
+                statusCode: {
+                    400: function(data) { alert(data.responseText); },
+                    500: function(data) { alert(data.responseText); }
                 }
             });
         }
@@ -54,9 +58,16 @@ function load_web_module() {
         data: { "uid": $("body").attr("uid") },
         success: function(data) {
             $("body").append(data);
+        },
+        statusCode: {
+            403: function(data) { 
+                alert(data.responseText); 
+                $.cookie("uid", null);
+                location.reload(true);}
         }
     });
 }
+
 -->
 </script>
 {% if not uid %}
