@@ -3,6 +3,7 @@
 from flask import Flask, render_template, make_response, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
+from simplejson import dumps
 from uuid import uuid4
 import modules
 
@@ -17,7 +18,7 @@ DEBUG = True
 SECRET_KEY = 'foo'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///dcu_storage.db'
 
-# Create small app
+# Create application
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -26,15 +27,20 @@ db = SQLAlchemy(app)
 
 # Database models
 class Client(db.Model):
+    __tablename__ = 'clients'
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.String(36), unique = True)
-    name = db.Column(db.String(40), unique = True)
+    name = db.Column(db.String(15), unique = True)
     module = db.Column(db.String(40))
+    access = db.Column(db.String(120))
 
     def __init__(s, name, module):
         s.uid = str(uuid4())
         s.name = name
         s.module = module
+
+    def __repr__(s):
+        return '<Client %r>' % s.name
 
 # Routes
 @app.route('/')
@@ -51,26 +57,30 @@ def dcu_handler():
     '''
     if 'uid' in request.values:
         return make_response('You uid is %s' % request.values['uid'], 200)
-
     else:
         try:
             name = request.values['name']
             module = request.values['module']
+
+            if len(name) < 4 or len(name) > 15:
+                return make_response('Name error, must be from 4 to 15', 400)
+
             if module in modules.get_list():
                 c = Client(name, module)
                 db.session.add(c)
                 db.session.commit()
-                return make_response('uid:%s' % c.uid, 200)
+                return make_response(dumps({'uid':c.uid}), 200)
             else:
-                return make_response('Unknown module \'%s\'' % module, 500)
+                return make_response('Unknown module \'%s\'' % module, 400)
+
+        except KeyError:
+                return make_response('Not sended name or module', 400)
 
         except SQLAlchemyError:
-            return make_response('Database exeption(m.b. name in use)', 500)
+            return make_response('Database exeption(m.b. name in use)', 400)
 
         except:
             return make_response('Client create unknown exception', 500)
-
-    return make_response('Bad request', 400)
 
 # Self server mode
 if __name__ == '__main__':
