@@ -49,6 +49,8 @@ def base_web_client():
     '''
         Render base web client.
     '''
+    if 'uid' in request.cookies:
+        return render_template('base_web_client.html', uid=request.cookies['uid'])
     return render_template('base_web_client.html')
 
 @app.route('/dcu', methods = ['GET', 'POST'])
