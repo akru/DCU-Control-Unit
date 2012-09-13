@@ -3,7 +3,7 @@
 from flask import Flask, render_template, make_response, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
-from simplejson import dumps
+from simplejson import dumps, loads
 from uuid import uuid4
 import modules
 
@@ -38,6 +38,7 @@ class Client(db.Model):
         s.uid = str(uuid4())
         s.name = name
         s.module = module
+        s.access = dumps([])
 
     def __repr__(s):
         return '<Client %r>' % s.name
@@ -56,7 +57,24 @@ def dcu_handler():
         Main DCU handler.
     '''
     if 'uid' in request.values:
-        return make_response('You uid is %s' % request.values['uid'], 200)
+        uid = request.values['uid']
+
+        c = Client.query.filter_by(uid=uid).first()
+        if c is None:
+            return make_response('UID not registered', 403)
+
+        if 'recv' in request.values:
+            module = request.values['recv']
+            if not module in loads(c.access):
+                return make_response('Access denied to \'%s\'' % module, 403)
+        else:
+            module = c.module
+
+        if module in modules.get_list():
+            proxy = modules.load(c.module).proxy
+            return proxy.run(c)
+        else:
+            return make_response('Unknown module \'%s\'' % c.module, 500)
     else:
         try:
             name = request.values['name']
