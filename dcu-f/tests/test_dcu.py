@@ -56,5 +56,11 @@ class DCUTestCase(unittest.TestCase):
         assert 'receive client test' in res.data
         print 'login complete'
 
+        res = s.app.get('/dcu?uid=%s&logout' % uid)
+        assert '{\"logout\": true}' in res.data
+        res = s.app.get('/dcu?uid=%s' % uid)
+        assert 'UID not registered' in res.data
+        print 'logout complete'
+
 if __name__ == '__main__':
     unittest.main()

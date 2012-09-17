@@ -69,6 +69,11 @@ def dcu_handler():
         if c is None:
             return make_response('UID not registered', 403)
 
+        if 'logout' in request.values:
+            db.session.delete(c)
+            db.session.commit()
+            return make_response(dumps({'logout':True}), 200)
+
         if 'recv' in request.values:
             module = request.values['recv']
             if not module in loads(c.access):
