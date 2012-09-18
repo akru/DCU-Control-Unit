@@ -82,7 +82,7 @@ def dcu_handler():
             module = c.module
 
         if module in modules.get_list():
-            proxy = modules.load(c.module).proxy
+            proxy = modules.load(module).proxy
             return proxy.run(c)
         else:
             return make_response('Unknown module \'%s\'' % c.module, 500)
