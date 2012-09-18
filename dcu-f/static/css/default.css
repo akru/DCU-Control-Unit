@@ -12,17 +12,5 @@ body, html {
 	padding: 2px 4px;
     position: absolute;
 }
-#plus-toolbar { left: 8px }
-#user-toolbar { right: 8px }
-#user-toolbar #username { margin: 3px auto; font-size: 11pt; color: #555; text-shadow: 1px 1px 1px #EEE }
 
 label, input { display:inline; }
-input.text { margin-bottom:12px; width:95%; padding: .4em; }
-fieldset { padding:0; border:0; margin-top:0; margin-bottom:0}
-
-#client-list .ui-selecting { background: #EEE; }
-#client-list .ui-selected { background: #DDD; }
-#client-list { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-#client-list li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; text-shadow: 1px 1px 1px #CCC }
-.client-name { float: left; font-weight: bold; }
-.client-module { text-align: right; font-style: italic; }

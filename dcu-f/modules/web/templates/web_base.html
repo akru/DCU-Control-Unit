@@ -1,0 +1,119 @@
+<style>
+<!--
+#plus-toolbar { left: 8px }
+#user-toolbar { right: 8px }
+#user-toolbar #username { margin: 3px auto; font-size: 11pt; color: #555; text-shadow: 1px 1px 1px #EEE }
+#client-list .ui-selecting { background: #EEE; }
+#client-list .ui-selected { background: #DDD; }
+#client-list { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#client-list li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; text-shadow: 1px 1px 1px #CCC }
+.client-name { float: left; font-weight: bold; }
+.client-module { text-align: right; font-style: italic; }
+-->
+</style>
+
+<script type="text/javascript">
+<!--
+$( "#client-select-button" ).button({
+    text: false,
+    icons: {
+        primary: "ui-icon-plus"
+    }
+}).click(function() {
+    $.ajax({
+        type: "GET",
+        dataType: "html",
+        url: "dcu",
+        data: { "uid": $("body").attr("uid"), "get": "client_list" },
+        success: function(data) {
+            create_select_dialog(data);
+        }
+    });
+});
+$( "#logout-button" ).button({
+    text: false,
+    icons: {
+        primary: "ui-icon-close"
+    }
+}).click(function() {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "dcu",
+        data: { "uid": $("body").attr("uid"), "logout": 1 },
+        success: function(data) {
+            if (data["logout"])
+                location.reload(true);
+        }
+    });
+});
+
+function create_select_dialog(client_list) {
+    $("body").append(client_list);
+    $("#client-list").selectable();
+    $("#client-select-dialog").dialog({
+        autoOpen: true,
+        show: "fade",
+        hide: "fade",
+        height: 300,
+        width: 350,
+        minHeight: 300,
+        minWidth: 350,
+        modal: true,
+        buttons: {
+            Ok: function() {
+				$.each($("#client-list li.ui-selected"),
+					function(index, val) {
+						create_client_window($($(val).children()[0]).text(), 
+							$($(val).children()[1]).text());
+				});
+				$(this).dialog("close");
+				$(this).dialog("destroy");
+			}
+		}
+	});
+}
+
+function create_client_window(name, module_name) {
+	var windowId = "#client-window-" + name;
+	if ($(windowId).length > 0)
+		return;
+	$.ajax({
+		type: "GET",
+		dataType: "html",
+		url: "dcu",
+		data: { "uid": $("body").attr("uid"), "recv": module_name},
+		success: function(ui) {
+			// Append window block
+			$("body").append(
+				"<div id=\"client-window-" + name + 
+				"\" style=\"display:none\">" + ui + "</div>"
+			);
+			// Create window
+			$(windowId).dialog({
+				autoOpen: true,
+				show: "fade",
+				hide: "fade",
+				title: module_name + " :: " + name,
+				buttons: { 
+					"activate" : function(){ /* TODO: login to client */ },
+					"deactivate": function(){ /* TODO: logout from client */ }
+				},
+				close: function() {
+					$(this).dialog("destroy");
+					$(this).remove(); 
+				}
+			});
+		}
+	});
+}
+-->
+</script>
+
+<span id="plus-toolbar" class="ui-widget-header ui-corner-all toolbar">
+    <button id="client-select-button">Add new DCU-Window</button>
+</span>
+<span id="user-toolbar" class="ui-widget-header ui-corner-all toolbar">
+    <label id="username">{{ client.name }}</label>
+    <button id="logout-button">Logout</button>
+</span>
