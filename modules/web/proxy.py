@@ -1,4 +1,5 @@
-from flask import render_template, request
+# -*- coding: utf-8 -*-
+from flask import render_template, make_response, request
 from dcu import Client
 
 
@@ -13,5 +14,9 @@ make_html = {
 def run(client):
     if 'get' in request.values:
         req = request.values['get']
-        return make_html[req]()
+        try:
+            return make_html[req]()
+
+        except IndexError:
+            return make_response('Unknown get request', 400)
     return render_template('web_base.html', client=client)

@@ -85,7 +85,7 @@ def dcu_handler():
             proxy = modules.load(module).proxy
             return proxy.run(c)
         else:
-            return make_response('Unknown module \'%s\'' % c.module, 500)
+            return make_response('Unknown module \'%s\'' % c.module, 400)
     else:
         try:
             name = request.values['name']
