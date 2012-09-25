@@ -50,7 +50,7 @@ class DCUTestCase(unittest.TestCase):
         assert 'UID not registered' in res.data
 
         res = s.app.get('/dcu?uid=%s&recv=foo' % uid)
-        assert 'Access denied to \'foo\'' in res.data
+        assert 'Receiver not registered' in res.data
 
         res = s.app.get('/dcu?uid=%s' % uid)
         assert 'receive client test' in res.data
