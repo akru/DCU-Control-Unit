@@ -1,0 +1,45 @@
+<script type="text/javascript">
+<!--
+$("#{{ client.name }}-left-motor").slider({
+    min: -100,
+    max: 100,
+    step: 100,
+    orientation: "vertical",
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "left", "speed": ui.value },
+        });
+    }
+});
+$("#{{ client.name }}-right-motor").slider({
+    min: -100,
+    max: 100,
+    step: 100,
+    orientation: "vertical",
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "right", "speed": ui.value },
+        });
+    }
+});
+-->
+</script>
+
+<div style="width: 50%; height: 100%; float: left">
+    <label for="{{ client.name }}-left-motor">Left:</label>
+    <div id="{{ client.name }}-left-motor"></div>
+</div>
+<div style="height: 100%; margin-left: 50%">
+    <label for="{{ client.name }}-right-motor">Right:</label>
+    <div id="{{ client.name }}-right-motor"></div>
+</div>
