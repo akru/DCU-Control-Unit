@@ -82,7 +82,7 @@ function create_client_window(name, module_name) {
 		type: "GET",
 		dataType: "html",
 		url: "dcu",
-		data: { "uid": $("body").attr("uid"), "recv": module_name},
+        data: { "uid": $("body").attr("uid"), "recv": name },
 		success: function(ui) {
 			// Append window block
 			$("body").append(

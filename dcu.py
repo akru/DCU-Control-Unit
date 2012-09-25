@@ -75,15 +75,24 @@ def dcu_handler():
             return make_response(dumps({'logout':True}), 200)
 
         if 'recv' in request.values:
-            module = request.values['recv']
-            if not module in loads(c.access):
+            receiver = request.values['recv']
+
+            r = Client.query.filter_by(name=receiver).first()
+            if r is None:
+                return make_response('Receiver not registered', 403)
+
+            if not r.module in loads(c.access):
                 return make_response('Access denied to \'%s\'' % module, 403)
+
+            module = r.module
+            client = r
         else:
             module = c.module
+            client = c
 
         if module in modules.get_list():
             proxy = modules.load(module).proxy
-            return proxy.run(c)
+            return proxy.run(client)
         else:
             return make_response('Unknown module \'%s\'' % c.module, 400)
     else:
@@ -113,4 +122,4 @@ def dcu_handler():
 
 # Self server mode
 if __name__ == '__main__':
-    app.run()
+    app.run(host='192.168.0.124')
