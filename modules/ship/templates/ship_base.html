@@ -1,0 +1,62 @@
+<script type="text/javascript">
+<!--
+$("#{{ client.name }}-front-motor").slider({
+    min: 0,
+    max: 250,
+    step: 25,
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "front", "speed": ui.value },
+        });
+    }
+});
+$("#{{ client.name }}-middle-motor").slider({
+    min: 0,
+    max: 255,
+    step: 25,
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "middle", "speed": ui.value },
+        });
+    }
+});
+$("#{{ client.name }}-back-motor").slider({
+    min: 0,
+    max: 250,
+    step: 25,
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "back", "speed": ui.value },
+        });
+    }
+});
+-->
+</script>
+
+<div>
+    <label for="{{ client.name }}-front-motor">Front motor:</label>
+    <div id="{{ client.name }}-front-motor"></div>
+</div>
+<div>
+    <label for="{{ client.name }}-middle-motor">Middle motor:</label>
+    <div id="{{ client.name }}-middle-motor"></div>
+</div>
+<div>
+    <label for="{{ client.name }}-back-motor">Back motor:</label>
+    <div id="{{ client.name }}-back-motor"></div>
+</div>
