@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from nxt.motor import *
 import nxt, thread, httplib, simplejson, thread, time
 
