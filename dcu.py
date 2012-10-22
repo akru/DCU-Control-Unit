@@ -81,8 +81,8 @@ def dcu_handler():
             if r is None:
                 return make_response('Receiver not registered', 403)
 
-            if not r.module in loads(c.access):
-                return make_response('Access denied to \'%s\'' % module, 403)
+            if not r.name in loads(c.access):
+                return make_response('Access denied to \'%s\'' % r.name, 403)
 
             module = r.module
             client = r
