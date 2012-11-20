@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, make_response, request
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import OperationalError
 from simplejson import dumps, loads
 from uuid import uuid4
 import modules
@@ -112,13 +112,18 @@ def dcu_handler():
                 return make_response('Unknown module \'%s\'' % module, 400)
 
         except KeyError:
-                return make_response('Not sended name or module', 400)
+            return make_response('Not sended name or module', 400)
 
-        except SQLAlchemyError:
-            return make_response('Database exeption(m.b. name in use)', 400)
+        except OperationalError as e:
+            if DEBUG:
+                return make_response('Database error: %s' % e, 400)
+            else:
+                return make_response('Database error', 400)
 
         except:
             return make_response('Client create unknown exception', 500)
+
+
 
 # Self server mode
 if __name__ == '__main__':
