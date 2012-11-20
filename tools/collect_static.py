@@ -23,8 +23,8 @@ try:
     try:
         copytree(core_static, target)
         print 'done'
-    except OSError:
-        print 'pass'
+    except OSError as e:
+        print 'pass: %s' % e.strerror
 
     for module in modules.get_list():
         print 'Copying %s static files...' % module
@@ -32,8 +32,8 @@ try:
         try:
             copytree(module_static, join(target, module))
             print 'done'
-        except OSError:
-            print 'pass'
+        except OSError as e:
+            print 'pass: %s' % e.strerror
 
     print 'complete! Have fun! =)'
 
