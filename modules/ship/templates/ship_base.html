@@ -45,6 +45,21 @@ $("#{{ client.name }}-back-motor").slider({
         });
     }
 });
+$("#{{ client.name }}-servo-motor").slider({
+    min: 0,
+    max: 250,
+    step: 25,
+    stop: function (event, ui) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "dcu",
+            data: { "uid": $("body").attr("uid"),
+                    "recv": "{{ client.name }}", 
+                    "motor": "servo", "speed": ui.value },
+        });
+    }
+});
 -->
 </script>
 
@@ -59,4 +74,8 @@ $("#{{ client.name }}-back-motor").slider({
 <div>
     <label for="{{ client.name }}-back-motor">Back motor:</label>
     <div id="{{ client.name }}-back-motor"></div>
+</div>
+<div>
+    <label for="{{ client.name }}-servo-motor">Servo motor:</label>
+    <div id="{{ client.name }}-servo-motor"></div>
 </div>
