@@ -52,10 +52,18 @@ def base_web_client():
     '''
         Render base web client.
     '''
-    if 'uid' in request.cookies:
+    try:
         uid = request.cookies['uid']
+    except KeyError:
+        return render_template('base_web_client.html')
+
+    try:
+        recv = request.values['recv']
+    except KeyError:
         return render_template('base_web_client.html', uid=uid)
-    return render_template('base_web_client.html')
+
+    return render_template('base_web_client.html', uid=uid, recv=recv)
+
 
 @app.route('/dcu', methods = ['GET', 'POST'])
 def dcu_handler():
