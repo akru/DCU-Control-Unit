@@ -43,7 +43,7 @@ class DCUTestCase(unittest.TestCase):
         print 'registered uid: %s' % uid
 
         res = s.app.get('/dcu?name=test&module=utest')
-        assert 'Database exeption(m.b. name in use)' in res.data
+        assert 'Client create unknown exception' in res.data
         print 'double registration is not permitted'
 
         res = s.app.get('/dcu?uid=12345')
