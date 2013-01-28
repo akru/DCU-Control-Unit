@@ -6,7 +6,6 @@
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.timers.js"></script>
     <link href="/static/css/default.css" rel="stylesheet" type="text/css">
     <link href="/static/css/jquery-ui-1.8.16.smoothness.css" rel="stylesheet" type="text/css">
     <!--[if IE]>
@@ -16,6 +15,22 @@
 <body uid="{{ uid }}">
 <script type="text/javascript">
 <!--
+function load(filename, filetype){
+    if (filetype == "js") { //if filename is a external JavaScript file
+        var fileref = document.createElement('script');
+        fileref.setAttribute("type","text/javascript");
+        fileref.setAttribute("src", filename);
+    }
+    else if (filetype == "css") { //if filename is an external CSS file
+        var fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", filename);
+    }
+    if (typeof fileref != "undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
 $(document).ready(function() {
 {% if uid %}
     load_web_module();
@@ -56,7 +71,9 @@ function load_web_module() {
         type: "GET",
         dataType: "html",
         url: "dcu",
-        data: { "uid": $("body").attr("uid") },
+        data: { "uid": $("body").attr("uid")
+{% if recv %}, "recv": "{{ recv }}" {% endif %}
+        },
         success: function(data) {
             $("body").append(data);
         },
