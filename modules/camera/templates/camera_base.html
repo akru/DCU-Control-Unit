@@ -1,10 +1,9 @@
 <script type="text/javascript">
 <!--
-$(document).everyTime(500, function (){
-    var t = new Date();
-    t = t.getTime() / 1000 - 1;
-    var src = "/static/camera/{{ public_uid }}/" + t.toFixed() + ".ppm.png";
-    $("#{{ public_uid }}").attr("src", src);
+$("#{{ public_uid }}")
+    .everyTime(200, function (){
+        var src = "/camera/{{ public_uid }}?" + Math.random();
+        $("#{{ public_uid }}").attr("src", src);
 });
 -->
 </script>

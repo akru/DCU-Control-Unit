@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import subprocess, pickle, os
+import subprocess, pickle
 
 def run(source_port, public_uid):
-    dest_dir = '/tmp/camera/' + public_uid
-    os.mkdir(dest_dir)
-    return pickle.dumps(subprocess.Popen(['vcaps', '%d' % source_port, '%s' % dest_dir ]))
+    return pickle.dumps(subprocess.Popen(['vcaps', '%d' % source_port, '%s' % public_uid ], close_fds=True))
 
 def stop(pid):
     p = pickle.loads(pid)
