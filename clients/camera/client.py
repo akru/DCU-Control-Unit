@@ -4,7 +4,7 @@ import httplib, simplejson, subprocess, time
 
 SERVERIP = '194.85.161.167'
 MODULE = 'camera'
-NAME = 'CAMERA_001'
+NAME = 'CAMERA_AKRU'
 
 def register():
     conn = httplib.HTTPSConnection(SERVERIP)
@@ -32,7 +32,7 @@ def proc(uid):
         print 'Port:', port['source_port']
 
         port = port['source_port']
-        subprocess.Popen(['start_vcap', SERVERIP, '%s' % port], close_fds=True)
+        subprocess.Popen(['start_vcap.sh', SERVERIP, '%s' % port], close_fds=True)
         print 'Translation started'
         while 1:
             time.sleep(1)
