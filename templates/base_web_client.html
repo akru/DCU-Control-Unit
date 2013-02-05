@@ -53,7 +53,7 @@ $(document).ready(function() {
                 success: function(data) {
                     $("#login-toolbar").remove();
                     $("body").attr("uid", data["uid"]);
-                    $.cookie("uid", data["uid"]);
+                    $.cookie("uid", data["uid"], {expires: 7});
                     load_web_module();
                 },
                 statusCode: {
