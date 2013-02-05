@@ -94,12 +94,11 @@ function create_client_window(name, module_name) {
 			// Create window
 			$(windowId).dialog({
 				autoOpen: true,
+				width: 340,
 				show: "fade",
 				hide: "fade",
 				title: module_name + " :: " + name,
 				buttons: { 
-					"activate" : function(){ /* TODO: login to client */ },
-					"deactivate": function(){ /* TODO: logout from client */ }
 				},
 				close: function() {
 					$(this).dialog("destroy");

@@ -1,11 +1,32 @@
 <script type="text/javascript">
 <!--
-$("#{{ public_uid }}")
-    .everyTime(200, function (){
-        var src = "/camera/{{ public_uid }}?" + Math.random();
-        $("#{{ public_uid }}").attr("src", src);
-});
+$("#{{ public_uid }}").css({height: 240, width: 320});
+setInterval(function (){
+    var uri = "/camera/{{ public_uid }}";
+    $.ajax({
+        url: uri + "-ts",
+        dataType: "html",
+        success: function (ts){
+            var old_ts = $("body").data("{{ public_uid }}ts");
+            if (ts != old_ts) {
+                $("body").data("{{ public_uid }}ts", ts)
+                var img = new Image();
+                img.src = uri + "?" + Math.random();
+                img.onload = function (){
+                    var can = document.getElementById("{{ public_uid }}");
+                    var ctx = can.getContext("2d");
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    ctx.fillStyle = "#FF0000";
+                    ctx.font = "8pt Verdana";
+                    ctx.fillText("TS: " + ts, 5, 15);
+                }
+            }
+        }
+    });
+}, 200);
 -->
 </script>
 
-<img id="{{ public_uid }}" height="240" width="320" src="">
+<canvas id="{{ public_uid }}">
+Your browser does not support HTML5
+</canvas>
