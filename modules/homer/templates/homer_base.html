@@ -1,45 +1,255 @@
-<script type="text/javascript">
-<!--
-$("#{{ client.name }}-left-motor").slider({
-    min: -100,
-    max: 100,
-    step: 100,
-    orientation: "vertical",
-    stop: function (event, ui) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "dcu",
-            data: { "uid": $("body").attr("uid"),
-                    "recv": "{{ client.name }}", 
-                    "motor": "left", "speed": ui.value },
-        });
-    }
-});
-$("#{{ client.name }}-right-motor").slider({
-    min: -100,
-    max: 100,
-    step: 100,
-    orientation: "vertical",
-    stop: function (event, ui) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "dcu",
-            data: { "uid": $("body").attr("uid"),
-                    "recv": "{{ client.name }}", 
-                    "motor": "right", "speed": ui.value },
-        });
-    }
-});
--->
-</script>
+<style type="text/css">
 
-<div style="width: 50%; height: 100%; float: left">
-    <label for="{{ client.name }}-left-motor">Left:</label>
-    <div id="{{ client.name }}-left-motor"></div>
+        #coords {
+                position: absolute; 
+                top: 50px; 
+                left: 10px;
+                color: red;
+        }
+
+        .joystick { 
+                background-color: #009999; 
+                width: 120px; 
+                height: 120px;
+                padding: 5px;
+                margin: 5px; 
+                position: relative; 
+                #top: 10px; 
+                #left: 5px;
+                #-moz-border-radius: 60px;
+                #-webkit-border-radius: 60px;
+                -moz-border-radius: 16px;
+                -webkit-border-radius: 16px;
+                border: 2px solid black;
+                float: left;
+        }
+        #mover {
+                border-radius: 3px; 
+                background-color:red; 
+                position: relative; 
+                margin: 0px; 
+                padding: 0px; 
+                width: 10px; 
+                height: 10px; 
+                left: 55px; 
+                top: 55px; 
+        }
+
+
+        .table {
+                border-radius: 4px;
+                background-color: #696969; 
+                width: 213px;
+                height: 165px; 
+                padding: 5px;
+                margin: 15px;
+                border: 2px solid black;
+                position: relative;
+                #top: 10px;
+                #left: 10px;
+                #zoom: 100%;
+        }
+
+        .progressbar_left {
+                width: 20px;
+                height: 120px;
+                position: relative;
+                background: transparent no-repeat;
+                #top: 10px;
+                #left: 2px;
+                float: left;
+                margin: 7px;
+        }
+        .progressbar-value_left {
+                position: absolute;
+                display: block;
+                margin: 7px;
+                border: 0;
+                width: 12px;
+                height: 120px;
+                #top: 7px;
+                #left: 5px;
+                overflow: hidden;
+                text-indent: -30px;
+                background: #0f0 url(/static/homer/progressbar_bg.png) center center;
+
+        }
+        .progressbar-cover_left {
+                position: absolute;
+                display: block;
+                width: 13px;
+                height: 120px;
+                border: 0;
+                left: 0;
+                bottom: 0%;
+                background: transparent url(/static/homer/progressbar_cover.png) repeat-x 0 0;
+        }
+
+        .progressbar_right {
+                width: 20px;
+                height: 120px;
+                position: relative;
+                background: transparent no-repeat;
+                margin: 7px;
+                #top: 10px;
+                #right: 5px;
+                float: right;
+        }
+        .progressbar-value_right {
+                position: absolute;
+                display: block;
+                margin: 7px;
+                border: 0px;
+                width: 12px;
+                height: 120px;
+                #top: 7px;
+                #left: 5px;
+                overflow: hidden;
+                text-indent: -30px;
+                background: #0f0 url(/static/homer/progressbar_bg.png) center center;
+        }
+        .progressbar-cover_right {
+                position: absolute;
+                display: block;
+                width: 13px;
+                height: 120px;
+                border: 0px;
+                left: 0;
+                bottom: 0%;
+                background: transparent url(/static/homer/progressbar_cover.png) repeat-x 0 0;
+        }
+
+</style>
+
+<script>
+        //$(window).load(function () {
+                //    var timer = window.setInterval("status();", 4000);
+                //});
+        var track_left = 0;
+        var track_right = 0;
+        var intervalID = null;
+
+        //var zoom = $('#table').css('zoom');
+        $("#mover").draggable({
+                revert: true,
+                containment: "parent",
+                create: function(){
+                        $(this).data("startLeft",parseInt($(this).css("left")));
+                        $(this).data("startTop",parseInt($(this).css("top")));
+                },
+                start: function(event,ui){
+
+                        intervalID = window.setInterval("send_control(track_left, track_right);", 500);
+                        //intervalID = window.setInterval(send_control(), 500, track_left, track_right);
+                },
+
+                drag: function(event,ui){
+                        //var track_left, track_right;
+                        var bgcolor_right, bgcolor_left;                                            
+                        var rel_left = Math.round((ui.position.left - parseInt($(this).data("startLeft")))*100/55);
+                        var rel_top = Math.round((ui.position.top - parseInt($(this).data("startTop")))*100/55);
+
+
+                        if ((Math.abs(rel_left) < 10) && (Math.abs(rel_top) < 10)) {
+                                track_left = 0;
+                                track_right = 0;
+                        }
+                        else {
+                                var G_x = rel_left;
+                                var G_y = -rel_top;
+                                track_left = G_y + G_x;
+                                track_right = G_y - G_x;
+                                if (Math.abs(track_left) > 100) { 
+                                        track_left = (track_left > 0) ? 100 : -100 ; }
+                                if (Math.abs(track_right) > 100) { 
+                                        track_right = (track_right > 0) ? 100 : -100 ; }
+                        }
+
+                        bgcolor_left = (Math.abs(track_left) < 50) ? '#0f0' :'#ff0';
+                        bgcolor_right = (Math.abs(track_right) < 50) ? '#0f0' :'#ff0';
+                        if (Math.abs(track_left) > 90) { bgcolor_left = '#f00'; }
+                        if (Math.abs(track_right) > 90) { bgcolor_right = '#f00'; }
+                        //send_control(track_left, track_right);
+                        $('.progressbar-cover_left').css('bottom' , track_left + '%');
+                        $('.progressbar-value_left').css('backgroundColor' , bgcolor_left );
+                        $('.progressbar-cover_right').css('bottom' , track_right + '%');
+                        $('.progressbar-value_right').css('backgroundColor' , bgcolor_right );
+                        // Debug string (1 of 2)
+                        //$('#coords').text(rel_left + ", " + rel_top + " ... " + track_left + ", " + track_right + " | " + G_x + ", " + G_y);
+
+                },
+                //stop: function() {
+                        stop: function(event,ui){
+                                //Debug string (2 of 2)
+                                //$('#coords').html("&nbsp;");
+
+                                clearInterval(intervalID);
+                                send_control(0, 0);
+
+                                $('.progressbar-cover_left').css('bottom', '0%');
+                                $('.progressbar-value_left').css('backgroundColor' , '#0f0' );
+                                $('.progressbar-cover_right').css('bottom' , '0%');
+                                $('.progressbar-value_right').css('backgroundColor' , '#0f0' );
+                        }
+                });
+
+                function send_control(track_left, track_right) {
+                        $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                url: "dcu",
+                                data: { "uid": $("body").attr("uid"),
+                                        "recv": "{{ client.name }}", 
+                                        "motor": "right", "speed": track_right },
+                        });
+
+                        //Not sure about ';' atop, may be ','??
+
+                        $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                url: "dcu",
+                                data: { "uid": $("body").attr("uid"),
+                                        "recv": "{{ client.name }}", 
+                                        "motor": "left", "speed": track_left },
+                        });
+                        /*
+                        $.ajax({
+                                type: "GET",
+                                dataType: "json",
+                                url: "ajax/",
+                                data: {
+                                        name: "HOMER",
+                                        module_name: "homer",
+                                        client: {
+                                                "track_left": track_left, 
+                                                "track_right": track_right, },
+                                }
+                        });
+                        */
+
+                }
+
+
+        </script>
+
+
+        <div class="table">
+                <div class="progressbar_left">
+                        <div class="progressbar-value_left">
+                                <div class="progressbar-cover_left"></div></div>
+                </div>
+                <div class="progressbar_right">
+                        <div class="progressbar-value_right">
+                                <div class="progressbar-cover_right"></div></div>
+                </div>
+                <div class="joystick">
+                        <div id="mover"></div>
+                </div>
+                <div class="status_bar"></div>
+        </div>
+
+        <div id="coords">&nbsp;</div>
+
 </div>
-<div style="height: 100%; margin-left: 50%">
-    <label for="{{ client.name }}-right-motor">Right:</label>
-    <div id="{{ client.name }}-right-motor"></div>
 </div>
