@@ -130,7 +130,7 @@
                         $(this).data("startTop",parseInt($(this).css("top")));
                 },
                 start: function(event,ui){
-                        intervalID = window.setInterval("send_control(track_left, track_right);", 500);
+                        intervalID = window.setInterval("send_control(track_left, track_right);", 300);
                 },
                 drag: function(event,ui){
                         var bgcolor_right, bgcolor_left;                                            
