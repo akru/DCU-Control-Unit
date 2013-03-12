@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, make_response, request
+from flask import Flask, render_template, make_response, request, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import OperationalError
 from simplejson import dumps, loads
 from uuid import uuid4
-import modules
+import modules, requests
 
 ################################################################################
 ##
@@ -70,6 +70,12 @@ def dcu_handler():
     '''
         Main DCU handler.
     '''
+    ''' Proxy for JSON requests '''
+    if request.json is not None:
+        url = url_for('dcu_handler', _external=True)
+        return requests.get(url, params=request.json).text
+
+    ''' Try to parse request '''
     if 'uid' in request.values:
         uid = request.values['uid']
 
