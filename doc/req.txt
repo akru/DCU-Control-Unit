@@ -8,8 +8,6 @@ if uid not sended:
 
 if uid sended:
 	uid - unical identificator
-	data - serialazed data for module
-	raw - unserialazed data for module
 	recv - receiver module [may be not set]
 		if recv is set data & raw be proxyed to receiver module if uid has privileges
 		else data be proxyed to base module
