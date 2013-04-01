@@ -41,8 +41,8 @@ $( "#logout-button" ).button({
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "dcu",
-        data: { "uid": $("body").attr("uid"), "logout": 1 },
+        url: "logout",
+        data: { "uid": $("body").attr("uid") },
         success: function(data) {
             if (data["logout"])
                 location.reload(true);

@@ -8,11 +8,8 @@
     <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
     <link href="/static/css/default.css" rel="stylesheet" type="text/css">
     <link href="/static/css/jquery-ui-1.8.16.smoothness.css" rel="stylesheet" type="text/css">
-    <!--[if IE]>
-        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 </head>
-<body uid="{{ uid }}">
+<body {% if client and client != 'noset' %}uid="{{ client.uid }}"{% endif %}>
 <script type="text/javascript">
 <!--
 function load(filename, filetype){
@@ -32,7 +29,7 @@ function load(filename, filetype){
 }
 
 $(document).ready(function() {
-{% if uid %}
+{% if client and client != 'noset' %}
     load_web_module();
 {% else %}
     $("#send-button").button({
@@ -72,7 +69,7 @@ function load_web_module() {
         dataType: "html",
         url: "dcu",
         data: { "uid": $("body").attr("uid")
-{% if recv %}, "recv": "{{ recv }}" {% endif %}
+{% if recv and recv != 'noset' %}, "recv": "{{ recv.name }}" {% endif %}
         },
         success: function(data) {
             $("body").append(data);

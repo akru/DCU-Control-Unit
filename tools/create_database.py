@@ -7,13 +7,16 @@ import modules
 
 ################################################################################
 ##
-## Datastorage creator.
+##  Datastorage creator.
 ##
 ################################################################################
 
-for i in modules.get_list():
-    modules.load(i)
+if __name__ == '__main__':
+    ''' Load all modules and it models '''
+    for i in modules.get_list():
+        modules.load(i)
 
-from dcu import db
-db.create_all()
+    ''' Create datastorage '''
+    from dcu import db
+    db.create_all()
 

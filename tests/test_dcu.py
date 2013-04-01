@@ -26,16 +26,16 @@ class DCUTestCase(unittest.TestCase):
 
     def test_register_client(s):
         res = s.app.get('/dcu')
-        assert 'Not sended name or module' in res.data
+        assert '' in res.data
 
         res = s.app.get('/dcu?name=test')
-        assert 'Not sended name or module' in res.data
+        assert 'Error: not sended name or module' in res.data
 
         res = s.app.get('/dcu?module=utest')
-        assert 'Not sended name or module' in res.data
+        assert 'Error: not sended name or module' in res.data
 
         res = s.app.get('/dcu?name=test&module=te')
-        assert 'Unknown module \'te\'' in res.data
+        assert 'Error: unknown module \'te\'' in res.data
 
         res = s.app.get('/dcu?name=test&module=utest')
         uid = loads(res.data)['uid']
@@ -47,19 +47,19 @@ class DCUTestCase(unittest.TestCase):
         print 'double registration is not permitted'
 
         res = s.app.get('/dcu?uid=12345')
-        assert 'UID not registered' in res.data
+        assert 'Error: UID does not registered' in res.data
 
         res = s.app.get('/dcu?uid=%s&recv=foo' % uid)
-        assert 'Receiver not registered' in res.data
+        assert 'Error: receiver does not exist' in res.data
 
         res = s.app.get('/dcu?uid=%s' % uid)
         assert 'receive client test' in res.data
         print 'login complete'
 
-        res = s.app.get('/dcu?uid=%s&logout' % uid)
+        res = s.app.get('/logout?uid=%s' % uid)
         assert '{\"logout\": true}' in res.data
         res = s.app.get('/dcu?uid=%s' % uid)
-        assert 'UID not registered' in res.data
+        assert 'Error: UID does not registered' in res.data
         print 'logout complete'
 
 if __name__ == '__main__':

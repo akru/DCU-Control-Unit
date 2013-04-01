@@ -13,30 +13,30 @@ import modules
 ##
 ################################################################################
 
-try:
-    target = sys.argv[1]
-    print 'Moving static files to %s ...' % target
-
-    core_static = abspath('%s/../static' % dirname(__file__))
-    print core_static
-    print 'Copying core static files...'
+if __name__ == '__main__':
     try:
-        copytree(core_static, target)
-        print 'done'
-    except OSError as e:
-        print 'pass: %s' % e.strerror
+        target = sys.argv[1]
+        print 'Moving static files to %s ...' % target
 
-    for module in modules.get_list():
-        print 'Copying %s static files...' % module
-        module_static = join(join(modules.MODULES_DIR, module), 'static')
+        core_static = abspath('%s/../static' % dirname(__file__))
+        print core_static
+        print 'Copying core static files...'
         try:
-            copytree(module_static, join(target, module))
+            copytree(core_static, target)
             print 'done'
         except OSError as e:
             print 'pass: %s' % e.strerror
 
-    print 'complete! Have fun! =)'
+        for module in modules.get_list():
+            print 'Copying %s static files...' % module
+            module_static = join(join(modules.MODULES_DIR, module), 'static')
+            try:
+                copytree(module_static, join(target, module))
+                print 'done'
+            except OSError as e:
+                print 'pass: %s' % e.strerror
 
+        print 'complete! Have fun! =)'
 
-except IndexError:
-    print 'Usage:\n\tcollect_static.py [target]'
+    except IndexError:
+        print 'Usage:\n\tcollect_static.py [target]'
