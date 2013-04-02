@@ -136,7 +136,7 @@ def recv_checker(fn):
     def wrapper(*args, **kwargs):
         try:
             recv = request.values['recv']
-            r = Client.query.filter_by(uid=recv).first()
+            r = Client.query.filter_by(name=recv).first()
             return fn(receiver=r, *args, **kwargs)
 
         except KeyError:
