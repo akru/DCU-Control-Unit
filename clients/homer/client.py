@@ -21,7 +21,7 @@ def proc(uid, sock):
     h = HOMER(sock)
     while 1:
         conn = httplib.HTTPConnection(SERVER)
-        req = '/dcu?uid=%s&get=motors' % uid
+        req = '/dcu?uid=%s&get=differential' % uid
         res = conn.request('GET', req)
         res = conn.getresponse()
         if res.status == 200:

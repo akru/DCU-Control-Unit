@@ -118,8 +118,8 @@
 
 <script>
 
-        var track_left = 0;
-        var track_right = 0;
+        var radius = 0;
+        var angle = 0;
         var intervalID = null;
 
         $("#mover").draggable({
@@ -130,7 +130,7 @@
                         $(this).data("startTop",parseInt($(this).css("top")));
                 },
                 start: function(event,ui){
-                        intervalID = window.setInterval("send_control(track_left, track_right);", 300);
+                        intervalID = window.setInterval("send_control(radius, angle);", 300);
                 },
                 drag: function(event,ui){
                         var bgcolor_right, bgcolor_left;                                            
@@ -138,27 +138,23 @@
                         var rel_top = Math.round((ui.position.top - parseInt($(this).data("startTop")))*100/55);
 
                         if ((Math.abs(rel_left) < 10) && (Math.abs(rel_top) < 10)) {
-                                track_left = 0;
-                                track_right = 0;
+                                radius = 0;
+                                angle = 0;
                         }
                         else {
                                 var G_x = rel_left;
                                 var G_y = -rel_top;
-                                track_left = G_y + G_x;
-                                track_right = G_y - G_x;
-                                if (Math.abs(track_left) > 100) { 
-                                        track_left = (track_left > 0) ? 100 : -100 ; }
-                                if (Math.abs(track_right) > 100) { 
-                                        track_right = (track_right > 0) ? 100 : -100 ; }
+                                radius = G_y;
+                                angle = G_x;
                         }
-                        bgcolor_left = (Math.abs(track_left) < 50) ? '#0f0' :'#ff0';
-                        bgcolor_right = (Math.abs(track_right) < 50) ? '#0f0' :'#ff0';
-                        if (Math.abs(track_left) > 90) { bgcolor_left = '#f00'; }
-                        if (Math.abs(track_right) > 90) { bgcolor_right = '#f00'; }                        
-                        $('.progressbar-cover_left').css('bottom' , track_left + '%');
-                        $('.progressbar-value_left').css('backgroundColor' , bgcolor_left );
-                        $('.progressbar-cover_right').css('bottom' , track_right + '%');
-                        $('.progressbar-value_right').css('backgroundColor' , bgcolor_right );
+                        //bgcolor_left = (Math.abs(track_left) < 50) ? '#0f0' :'#ff0';
+                        //bgcolor_right = (Math.abs(track_right) < 50) ? '#0f0' :'#ff0';
+                        //if (Math.abs(track_left) > 90) { bgcolor_left = '#f00'; }
+                        //if (Math.abs(track_right) > 90) { bgcolor_right = '#f00'; }                        
+                        //$('.progressbar-cover_left').css('bottom' , track_left + '%');
+                        //$('.progressbar-value_left').css('backgroundColor' , bgcolor_left );
+                        //$('.progressbar-cover_right').css('bottom' , track_right + '%');
+                        //$('.progressbar-value_right').css('backgroundColor' , bgcolor_right );
                         
                         // Debug string (1 of 2)
                         //$('#coords').text(rel_left + ", " + rel_top + " ... " + track_left + ", " + track_right + " | " + G_x + ", " + G_y);
@@ -168,30 +164,22 @@
                         //$('#coords').html("&nbsp;");
                         
                         clearInterval(intervalID);
-                        send_control(0, 0);                        
+                        send_control(0, 0); 
                         $('.progressbar-cover_left').css('bottom', '0%');
                         $('.progressbar-value_left').css('backgroundColor' , '#0f0' );
                         $('.progressbar-cover_right').css('bottom' , '0%');
                         $('.progressbar-value_right').css('backgroundColor' , '#0f0' );
                         }
                 });
-                function send_control(track_left, track_right) {
+                function send_control(radius, angle) {
                         $.ajax({
                                 type: "GET",
                                 dataType: "json",
                                 url: "dcu",
                                 data: { "uid": $("body").attr("uid"),
                                         "recv": "{{ client.name }}", 
-                                        "motor": "right", "speed": track_right },
+                                        "set": "all", "args": [radius.toFixed(), angle.toFixed()] },
                         });
-                        $.ajax({
-                                type: "GET",
-                                dataType: "json",
-                                url: "dcu",
-                                data: { "uid": $("body").attr("uid"),
-                                        "recv": "{{ client.name }}", 
-                                        "motor": "left", "speed": track_left },
-                        });                       
                 }
 
 </script>
